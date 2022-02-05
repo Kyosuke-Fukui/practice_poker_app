@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'assets/css/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}?{% now 'U' %}" />
+    <title>Practice Poker</title>
+</head>
+
+<body>
+    <h1>Practice Poker</h1>
+    <form action="{% url 'home' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">NEW GAME</button>
+    </form>
+    <div id='btnarea'>
+        <button id="start">START</button>
+    </div>
+    <div class="display">
+        <div class="box">
+            {% for line in output %}
+            {{ line | safe}}<br>
+            {% endfor %}
+        </div>
+        <div>
+            <div class="hand">
+                <h2>Your Hand</h2>
+                <br>
+                <div>
+                    {% for card in hand %}
+                    <img src="static/assets/cards/{{ card }}.gif">
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+            <div class="board">
+                <h2>Board</h2>
+                <br>
+                <div>
+                    {% if flop %}
+                    {% for card in flop %}
+                    <img class="flop" src="static/assets/cards/{{ card }}.gif">
+                    {% endfor %}
+                    {% endif %}
+                    {% if turn %}
+                    <img class="turn" src="static/assets/cards/{{ turn }}.gif">
+                    {% endif %}
+                    {% if river %}
+                    <img class="river" src="static/assets/cards/{{ river }}.gif">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.hist').hide()
+            $('.flop').hide()
+            $('.turn').hide()
+            $('.river').hide()
+
+            $('button#start').click(function () {
+                $('.hist').each(function (i, e) {
+                    $(this).show()
+                    //ボタンがある行になったらループを抜ける
+                    if ($(this).children('button').val() != undefined) {
+                        return false;
+                    }
+                });
+            })
+
+            $('.box button').click(function () {
+                const action = $(this).text().toLowerCase()
+                //ボタンの行を正解のアクションに変更し、正解なら緑、不正解なら赤に
+                if ($(this).val().toLowerCase().indexOf(action) == -1) {
+                    $(this).parent().html($(this).val()).css('color', 'red')
+                } else {
+                    $(this).parent().html($(this).val()).css('color', 'green')
+                }
+
+                $('.hist').each(function (i, e) {
+                    $(this).show()
+                    // console.log($(this).text())
+                    if ($(this).text().indexOf('Flop') != -1) $('.flop').show()
+                    if ($(this).text().indexOf('Turn') != -1) $('.turn').show()
+                    if ($(this).text().indexOf('River') != -1) $('.river').show()
+                    //ボタンがある行になったらループを抜ける
+                    if ($(this).children('button').val() != undefined) {
+                        return false;
+                    }
+                });
+            })
+        })
+
+    </script>
+</body>
+
+</html>
