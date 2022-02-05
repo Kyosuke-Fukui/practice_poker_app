@@ -63,7 +63,6 @@ six==1.15.0
 soupsieve==2.2.1
 source==1.2.0
 sqlparse==0.4.1
-TA-Lib @ file:///C:/Users/owner/Downloads/TA_Lib-0.4.19-cp39-cp39-win_amd64.whl
 tabulate==0.8.9
 tensorboard==2.5.0
 tensorboard-data-server==0.6.1
